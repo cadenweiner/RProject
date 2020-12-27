@@ -1,0 +1,100 @@
+from datetime import datetime
+
+from app import db, login
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
+
+
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+# this is the assosiation table between two many to many tables. 
+dishIngredients = db.Table('dishIngredients',
+    db.Column('ingredient_id', db.Integer, db.ForeignKey('ingredient.id')), 
+    db.Column('dish_id', db.Integer, db.ForeignKey('dish.id'))
+)   
+# this is the assosiation table between two many to many tables. 
+beverageIngredients = db.Table('beverageIngredients',
+    db.Column('ingredient_id', db.Integer, db.ForeignKey('ingredient.id')), 
+    db.Column('beverage_id', db.Integer, db.ForeignKey('beverage.id'))
+)   
+
+class Dish(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(150))
+    body = db.Column(db.String(1500))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    likes = db.Column(db.Integer, default = 0)
+    happiness_level = db.Column(db.Integer, default = 3)
+    user = db.Column(db.Integer, db.ForeignKey('user.id'))
+    ingredients = db.relationship ('Ingredient', secondary = dishIngredients, 
+                            primaryjoin=(dishIngredients.c.dish_id == id),
+                            backref=db.backref('dishIngredients', lazy='dynamic'), lazy='dynamic') 
+
+class Ingredient(db.Model): 
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(20))
+    price = db.Column(db.Float)
+    salesPrice = db.Column(db.Float)
+    ingredientType = db.Column(db.Integer)#1 = drink ingredient, #2 = food ingredient, #3 = food or drink ingredient
+    drinks = db.relationship ('Beverage', secondary = beverageIngredients, 
+                            primaryjoin=(beverageIngredients.c.ingredient_id == id),
+                            backref=db.backref('beverageIngredients', lazy='dynamic'), lazy='dynamic') 
+    meals = db.relationship ('Dish', secondary = dishIngredients, 
+                            primaryjoin=(dishIngredients.c.ingredient_id == id),
+                            backref=db.backref('dishIngredients', lazy='dynamic'), lazy='dynamic') 
+    def __repr__(self):
+        return '{}-{}'.format(self.id,self.name)
+
+
+class Beverage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(150))
+    body = db.Column(db.String(1500))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    likes = db.Column(db.Integer, default = 0)
+    happiness_level = db.Column(db.Integer, default = 3)
+    user = db.Column(db.Integer, db.ForeignKey('user.id'))
+    ingredients = db.relationship ('Ingredient', secondary = beverageIngredients, 
+                            primaryjoin=(beverageIngredients.c.beverage_id == id),
+                            backref=db.backref('beverageIngredients', lazy='dynamic'), lazy='dynamic') 
+
+
+
+class User(UserMixin, db.Model): 
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), index=True, unique=True)
+    password_hash = db.Column(db.String(128))
+    firstname = db.Column(db.String(100))
+    lastname = db.Column(db.String(100))
+    address = db.Column(db.String(200))
+    email = db.Column(db.String(120), index=True, unique=True)
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+    
+    def __repr__(self):
+        return '{}-{}'.format(self.id,self.username)
+
+class Manager(UserMixin, db.Model): 
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), index=True, unique=True)
+    password_hash = db.Column(db.String(128))
+    firstname = db.Column(db.String(100))
+    lastname = db.Column(db.String(100))
+    address = db.Column(db.String(200))
+    email = db.Column(db.String(120), index=True, unique=True)
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+    
+    def __repr__(self):
+        return '{}-{}'.format(self.id,self.username)

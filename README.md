@@ -2,7 +2,10 @@
 
 
 
-Version 1: Inheritance only implementation of food and drinks and employee. This part will likely go away once I implement the webapp since I will implement the inheritance through the database structure. Version 2: Begin webapp/Start Testing Iteration 1: WebApp Phase 1 Iteration 2: WebApp Phase 2 Iteration 3: WebApp Phase 3 Version 3: Implement Simultion using random number generators. Version 4: Improve Simulation by using Machine Learning
+Version 1: Inheritance only implementation of food and drinks and employee. This part will likely go away once I implement the webapp since I will implement the inheritance through the database structure. 
+Version 1 will be done in a separate C++ project
+
+Version 2: Begin webapp/Start Testing Iteration 1: WebApp Phase 1 Iteration 2: WebApp Phase 2 Iteration 3: WebApp Phase 3 Version 3: Implement Simultion using random number generators. Version 4: Improve Simulation by using Machine Learning
 
 Info: Database: Will be using the SQLAlchemy Lite DataBase Machine Learning: Plotly/Dash libraries (Non Definite, need to do more research about the available libraries) CSS: Design and Style Model View Controller interface Flask Webapp
 
