@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Add New Ingredient</h1>
+  
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.ingredientName.label }}<br>
+            {{ form.ingredientName(class='textinput') }}<br>
+            {% for error in form.ingredientName.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.ingredientType.label }}<br>
+            {{ form.ingredientType}}
+        </p>
+        <p>
+            {{ form.ingredientCost.label }}<br>
+            {{ form.ingredientCost(class='textinput') }}<br>
+            {% for error in form.ingredientCost.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.ingredientSalesCost.label }}<br>
+            {{ form.ingredientSalesCost(class='textinput') }}<br>
+            {% for error in form.ingredientSalesCost.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit(class='button') }}</p>
+
+    </form>
+    
+{% endblock %}

@@ -23,19 +23,27 @@ beverageIngredients = db.Table('beverageIngredients',
 
 class Dish(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(150))
-    body = db.Column(db.String(1500))
+    name = db.Column(db.String(150))
+    price = db.Column(db.Float)
+    salesPrice = db.Column(db.Float)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    likes = db.Column(db.Integer, default = 0)
-    happiness_level = db.Column(db.Integer, default = 3)
-    user = db.Column(db.Integer, db.ForeignKey('user.id'))
     ingredients = db.relationship ('Ingredient', secondary = dishIngredients, 
                             primaryjoin=(dishIngredients.c.dish_id == id),
                             backref=db.backref('dishIngredients', lazy='dynamic'), lazy='dynamic') 
 
+class Beverage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150))
+    price = db.Column(db.Float)
+    salesPrice = db.Column(db.Float)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    ingredients = db.relationship ('Ingredient', secondary = beverageIngredients, 
+                            primaryjoin=(beverageIngredients.c.beverage_id == id),
+                            backref=db.backref('beverageIngredients', lazy='dynamic'), lazy='dynamic') 
+
 class Ingredient(db.Model): 
     id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(20))
+    name = db.Column(db.String(150))
     price = db.Column(db.Float)
     salesPrice = db.Column(db.Float)
     ingredientType = db.Column(db.Integer)#1 = drink ingredient, #2 = food ingredient, #3 = food or drink ingredient
@@ -48,22 +56,7 @@ class Ingredient(db.Model):
     def __repr__(self):
         return '{}-{}'.format(self.id,self.name)
 
-
-class Beverage(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(150))
-    body = db.Column(db.String(1500))
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    likes = db.Column(db.Integer, default = 0)
-    happiness_level = db.Column(db.Integer, default = 3)
-    user = db.Column(db.Integer, db.ForeignKey('user.id'))
-    ingredients = db.relationship ('Ingredient', secondary = beverageIngredients, 
-                            primaryjoin=(beverageIngredients.c.beverage_id == id),
-                            backref=db.backref('beverageIngredients', lazy='dynamic'), lazy='dynamic') 
-
-
-
-class User(UserMixin, db.Model): 
+class User(UserMixin, db.Model): #default user is a customer
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
@@ -72,6 +65,8 @@ class User(UserMixin, db.Model):
     address = db.Column(db.String(200))
     email = db.Column(db.String(120), index=True, unique=True)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    is_manager = db.Column(db.Boolean)
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -81,20 +76,7 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '{}-{}'.format(self.id,self.username)
 
-class Manager(UserMixin, db.Model): 
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), index=True, unique=True)
-    password_hash = db.Column(db.String(128))
-    firstname = db.Column(db.String(100))
-    lastname = db.Column(db.String(100))
-    address = db.Column(db.String(200))
-    email = db.Column(db.String(120), index=True, unique=True)
-    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-    
-    def __repr__(self):
-        return '{}-{}'.format(self.id,self.username)
+class Manager(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key = True) #student's user.id
+    shop_name = db.Column(db.String(150))
+    user = db.relationship("User", backref="user", uselist=False)

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1>Order a Beverage</h1>
+
+    {% if form %}
+
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+
+            {{form.beverage.label}}<br>
+            {{form.beverage(class="formselect")}}<br>
+            {{form.ingredients}}<br>
+
+            {{ form.submit(class="button") }}
+        </form>
+    {% endif %}
+
+
+  {% endblock %}
