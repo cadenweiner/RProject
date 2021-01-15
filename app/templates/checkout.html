@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1 class = "center">Order</h1>
+    <div class = postlist>
+        {% for item in items %}
+        <div class = post-box>
+            {% include '_item.html' %} 
+        </div>
+        {% endfor %}
+    </div>
+    <h1 class = center>Complete Order?</h1>
+    <form class = "center" action="{{ url_for('place_order', order_id = order.id)}}" method="post">
+        <a>
+        {{form.submit(class = 'button')}}
+        </a>
+    </form>
+  {% endblock %}

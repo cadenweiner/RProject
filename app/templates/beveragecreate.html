@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Create Beverage</h1>
+    <h1 class = "center">Create Beverage</h1>
   
-    <form action="" method="post" novalidate>
+    <form class = "center" action="" method="post" novalidate>
         {{ form.hidden_tag() }}
-        <p>
+        <p class = "center"> 
             {{ form.beverage.label }}<br>
             {{ form.beverage(class='textinput') }}<br>
             {% for error in form.beverage.errors %}
@@ -16,14 +16,14 @@
             {{ form.ingredients.label }}<br>
             {{ form.ingredients}}
         </p>
-        <p>
+        <p class = "center">
             {{ form.beverageCost.label }}<br>
             {{ form.beverageCost(class='textinput') }}<br>
             {% for error in form.beverageCost.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
-        <p>
+        <p class = "center">
             {{ form.beverageSalesCost.label }}<br>
             {{ form.beverageSalesCost(class='textinput') }}<br>
             {% for error in form.beverageSalesCost.errors %}

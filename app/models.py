@@ -20,6 +20,11 @@ beverageIngredients = db.Table('beverageIngredients',
     db.Column('ingredient_id', db.Integer, db.ForeignKey('ingredient.id')), 
     db.Column('beverage_id', db.Integer, db.ForeignKey('beverage.id'))
 )   
+# this is the assosiation table between two many to many tables. 
+itemIngredients = db.Table('itemIngredients',
+    db.Column('ingredient_id', db.Integer, db.ForeignKey('ingredient.id')), 
+    db.Column('item_id', db.Integer, db.ForeignKey('item.id'))
+)   
 
 class Dish(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,7 +38,7 @@ class Dish(db.Model):
 
 class Beverage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(150))
+    name = db.Column(db.String(150), unique = True)
     price = db.Column(db.Float)
     salesPrice = db.Column(db.Float)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
@@ -65,7 +70,8 @@ class User(UserMixin, db.Model): #default user is a customer
     address = db.Column(db.String(200))
     email = db.Column(db.String(120), index=True, unique=True)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
-    is_manager = db.Column(db.Boolean)
+    is_manager = db.Column(db.Boolean, default = False) #no way to register as a manager except for from website for security
+    order = db.relationship('Order', backref='user_orders', lazy = 'dynamic')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -75,8 +81,29 @@ class User(UserMixin, db.Model): #default user is a customer
     
     def __repr__(self):
         return '{}-{}'.format(self.id,self.username)
+#can have a history of orders. 
 
+#need a cart table to keep track of a current order
 class Manager(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key = True) #student's user.id
     shop_name = db.Column(db.String(150))
     user = db.relationship("User", backref="user", uselist=False)
+
+class Order(db.Model):
+    cart_id = db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    cart_items = db.relationship('Item', backref='cart_items', lazy = 'dynamic')     
+    order_fufilled = db.Column(db.Boolean, default = False)
+
+
+class Item(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('order.cart_id'))
+    name = db.Column(db.String(150))
+    price = db.Column(db.Float)
+    salesPrice = db.Column(db.Float)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    itemType = db.Column(db.String(50)) #Dish or Beverage
+    ingredients = db.relationship ('Ingredient', secondary = itemIngredients, 
+                            primaryjoin=(itemIngredients.c.item_id == id),
+                            backref=db.backref('itemIngredients', lazy='dynamic'), lazy='dynamic') 

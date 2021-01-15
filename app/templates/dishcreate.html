@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Create Dish</h1>
+    <h1 class = "center">Create Dish</h1>
   
-    <form action="" method="post" novalidate>
+    <form class = "center" action="" method="post" novalidate>
         {{ form.hidden_tag() }}
-        <p>
+        <p class = "center">
             {{ form.dish.label }}<br>
             {{ form.dish(class='textinput') }}<br>
             {% for error in form.dish.errors %}
@@ -16,7 +16,7 @@
             {{ form.ingredients.label }}<br>
             {{ form.ingredients}}
         </p>
-        <p>
+        <p class = "center">
             {{ form.dishCost.label }}<br>
             {{ form.dishCost(class='textinput') }}<br>
             {% for error in form.dishCost.errors %}
@@ -24,7 +24,7 @@
             {% endfor %}
             
         </p>
-        <p>
+        <p class = "center">
             {{ form.dishSalesCost.label }}<br>
             {{ form.dishSalesCost(class='textinput') }}<br>
             {% for error in form.dishSalesCost.errors %}

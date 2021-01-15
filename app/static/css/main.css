@@ -7,9 +7,10 @@
   
 }
 .nav-container {
-    background:#f6f6f6;
+    background: #981E32;
     font-family: Tahoma;
     font-size: 12px;
+    color: #981E32; 
     height: 32px;
     text-transform: uppercase;
 }
@@ -18,13 +19,14 @@ a:hover {
 }
 
 .button {
-    width : 65px;
-    padding : 3px;    
-    font-size: 16px;
-    margin : 5px;
-    padding : 5px;
-    border: 1px solid lightgray;
-    background-color:ghostwhite;
+    width : 180px;
+    padding : 1px;    
+    font-size: 20px;
+    margin: 3px;
+    padding: 2px;
+    background-color: #981E32;
+    color: white; 
+    border:2px solid white;
 }
 .button:hover {
     background-color: 157dd3;
@@ -55,7 +57,7 @@ a:hover {
     margin : 10px;
 }
 .flash-container {
-    background-color:cyan;
+    background-color:#981E32;
     color: black;
     width : 100%;
     font-weight: bold;
@@ -63,12 +65,15 @@ a:hover {
     font-size: 16px;
     margin : 5px;
     height: 16px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 .likecount{
     text-align: center;
     font-weight: bold;
 }
-.formtitle{
+.textinput{
     color: Black;
     width : 50%;
     font-size: 16px;
@@ -119,31 +124,36 @@ a:hover {
 .tagitem{
     margin:.3%; 
     padding:1%;
-    border:2px solid black;
-    background-color: aliceblue;
+    color: white; 
+    border:2px solid white;
+    background-color: black;
     text-align: center; 
     font-size: 12px;
 }
 
-
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
 
 
 
 @media screen and (max-width : 800px){
 .post-box{
-background-color:lightskyblue;
+background-color:Navy;
 width : 99%
 }
 }
 @media screen and (min-width : 800px) and (max-width : 1200px){
 .post-box{
-background-color:skyblue;
+background-color:darkblue;
 width : 48%
 }
 }
 @media screen and (min-width : 1200px){
 .post-box{
-background-color:deepskyblue;
+background-color:slateblue;
 width : 32%
 }
 }

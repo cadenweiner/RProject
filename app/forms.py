@@ -34,18 +34,13 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
-class DeleteForm(FlaskForm): 
-    delete = SubmitField('Delete')
 def get_dish_ingredients():
     return Ingredient.query.filter(Ingredient.ingredientType.in_([2, 3]))
-def dish_choices():
-    return Dish.query
 
 def get_drink_ingredients():
     return Ingredient.query.filter(Ingredient.ingredientType.in_([1, 3]))
 #beverage_choices = [(b.id, b.name) for b in Beverage.query.order_by(Beverage.name.desc())]
-def beverage_choices():
-    return Beverage.query    
+
 class DishCreationForm(FlaskForm):
     dish = StringField('Dish', validators=[DataRequired(), Length(min=0, max=30)])
     ingredients = QuerySelectMultipleField('Ingredients', query_factory = get_dish_ingredients, get_label='name',
@@ -74,20 +69,22 @@ class NewIngredientForm(FlaskForm):
 class DishOrderForm(FlaskForm): #a list of the dishes is presented
 #     #list all dishes and their costs and you can choose from them
 #     #use a multiple select field
-    dish = QuerySelectField('dishes', query_factory = dish_choices, get_label='name')
-    
     ingredients = QuerySelectMultipleField('ingredients', query_factory = get_dish_ingredients, get_label='name',
                                   widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
     submit = SubmitField('Order')
 
-
-
-
 class BeverageOrderForm(FlaskForm): #a list of the dishes is presented
 #     #list all dishes and their costs and you can choose from them
-#     #use a multiple select field
-    beverage = QuerySelectField('beverages', query_factory = beverage_choices, get_label='name')
+
+    #beverage = QuerySelectField('beverages', query_factory = beverage_choices, get_label='name')
     
     ingredients = QuerySelectMultipleField('ingredients', query_factory = get_drink_ingredients, get_label='name',
                                   widget=ListWidget(prefix_label=False), option_widget=CheckboxInput() )
     submit = SubmitField('Order')
+
+
+class DeleteForm(FlaskForm): #for student to sort course by recommendation
+    submit = SubmitField('Delete')
+
+class CompletionForm(FlaskForm): #for student to sort course by recommendation
+    submit = SubmitField('Fufill')

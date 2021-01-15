@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Menu</h1>
+    {%for dish in dishes%}
+    <h1>{{dish.name}}</h1>
+    {%endfor%}
+    {%for beverage in beverages%}
+    <h1>{{beverage.name}}</h1>
+    {%endfor%}
+    {%for ingredient in ingredients%}
+    <h1>{{ingredient.name}}</h1>
+    {%endfor%}
+
+
+
+{% endblock %}

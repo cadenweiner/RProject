@@ -1,0 +1,38 @@
+<table class = "posttable" style = "width:100%" valign="top">
+    <tr> 
+        <td colspan="3"><div class="posttitle center"> {{dish.name}} </div>
+        </td>
+    </tr>
+    <tr >
+
+        <td width = "5%" >
+            <h1 class = "center">
+            Dish Price : 
+            {{dish.salesPrice}} 
+            </h1>
+            <br> 
+            <h1 class = "center">Additional Ingredients</h1>
+            <form action="{{ url_for('orderdish', name = dish.name)}}" method="post">
+                {{form.ingredients.title}}
+                {{form.ingredients}}
+                {{form.submit(class = 'button')}}
+                </a>
+            </form>
+        </td>
+    </tr>
+    
+    <tr class = "center">
+        <td colspan="3" style = "text-align:center;" valign="bottom"> 
+            <h1>Contains: </h1> 
+            {% for i in dish.ingredients%}
+            <span class = "tagitem" >{{i.name}}</span>
+            {% endfor%} 
+          </td>
+        </tr>
+    </tr>
+    <td colspan="3" style = "text-align:center;" valign="bottom"> 
+        <div></div> 
+      </td>
+    </tr>
+</tr>
+</table>

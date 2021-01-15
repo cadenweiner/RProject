@@ -2,20 +2,22 @@
 
 {% block content %}
 
-    <h1>Order a Beverage</h1>
-
-    {% if form %}
-
-        <form action="" method="post">
-            {{ form.hidden_tag() }}
-
-            {{form.beverage.label}}<br>
-            {{form.beverage(class="formselect")}}<br>
-            {{form.ingredients}}<br>
-
-            {{ form.submit(class="button") }}
-        </form>
-    {% endif %}
-
+    <h1 class = "center">Order a Beverage</h1>
+    <div class = postlist>
+        {% for beverage in beverages %}
+        <div class = post-box>
+            {% include '_beverage.html' %} 
+        </div>
+        {% endfor %}
+    </div>
+    <div background-color:red>
+        <h1>Ingredient Prices</h1>
+        {% for ingredient in ingredients %}
+            <div>
+                {{ingredient.name}}
+                {{ingredient.salesPrice}}
+            </div>
+        {%endfor%}
+    </div>
 
   {% endblock %}
