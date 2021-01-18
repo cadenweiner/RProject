@@ -190,6 +190,11 @@ def list_order():
         return render_template('view_orders.html', orders = orders)
     else: #student
         order = Order.query.filter_by(user_id = current_user.id).first()
+        flash("The order has been fufilled {}".format(order.order_fufilled))
+        if order.order_fufilled == True: # if order is fufilled then the student can't order it again
+            flash('You don not currently have an order')
+            return redirect(url_for('menu'))
+            
         items = Item.query.filter_by(order_id = order.cart_id)
         dform = DeleteForm()
         form = CompletionForm()
@@ -201,11 +206,10 @@ def place_order(order_id):
     
     order = Order.query.filter_by(cart_id = order_id).first()
     if order.user_id == current_user.id:
-        order.order_fufilled = True
-        flash("The order has been placed")
+        order.order_fufilled = True # order is placed don't let them order it again
+        db.session.commit()
         return redirect(url_for('menu'))
     else : 
-        print("inside the else statement")
         flash("The order was not placed because it was not your order")
         return redirect(url_for('list_order'))
 
