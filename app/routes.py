@@ -213,6 +213,7 @@ def place_order(order_id):
         flash("The order was not placed because it was not your order")
         return redirect(url_for('list_order'))
 
+#we need another variable to see if the manager has made the order. Ready for pickup?
     
 
 @login_required
