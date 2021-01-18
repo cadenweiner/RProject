@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1 class = center>Complete Orders</h1>
+    {%for order in orders%}
+    <div class = post-box>
+        {%for item in order.cart_items%}
+        <div class = post-box>
+            {% include '_easyviewitem.html' %} 
+        </div>
+        {%endfor%}
+    </div>
+    {%endfor%}
+  {% endblock %}

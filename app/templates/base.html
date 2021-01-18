@@ -10,13 +10,18 @@
                 <td><a href="{{ url_for('menu') }}" class = "button">Menu</a></td>
                 {%if current_user%}
                     {%if current_user.is_authenticated == true %}
-                    <td><a href="{{ url_for('list_drinks') }}" class = "button"> Order Drink </a></td>
-                    <td><a href="{{ url_for('list_dishes') }}" class = "button"> Order Dish </a></td>
-                    <td><a href="{{ url_for('createdrink') }}" class = "button"> Create Drink </a></td>
-                    <td><a href="{{ url_for('createdish') }}" class = "button"> Create Dish </a></td>
-                    <td><a href="{{ url_for('createingredient') }}" class = "button"> Create Ingredient </a></td>
-                    <td><a href="{{ url_for('list_order') }}" class = "button"> Checkout</a></td>
-                    <td><a href="{{ url_for('logout') }}" class = "button"> Logout </a></td>
+                        {%if current_user.is_manager == true%}
+                        <td><a href="{{ url_for('createdrink') }}" class = "button"> Create Drink </a></td>
+                        <td><a href="{{ url_for('createdish') }}" class = "button"> Create Dish </a></td>
+                        <td><a href="{{ url_for('createingredient') }}" class = "button"> Create Ingredient </a></td>
+                        <td><a href="{{ url_for('list_order') }}" class = "button"> View Orders</a></td>
+                        <td><a href="{{ url_for('logout') }}" class = "button"> Logout </a></td>
+                        {%else%}
+                        <td><a href="{{ url_for('list_drinks') }}" class = "button"> Order Drink </a></td>
+                        <td><a href="{{ url_for('list_dishes') }}" class = "button"> Order Dish </a></td>
+                        <td><a href="{{ url_for('list_order') }}" class = "button"> Checkout</a></td>
+                        <td><a href="{{ url_for('logout') }}" class = "button"> Logout </a></td>
+                        {%endif%}
                     {%elif current_user.is_authenticated == false%}
                     <td><a href="{{ url_for('login') }}" class = "button"> Login </a></td>
                     {%endif%}

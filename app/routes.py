@@ -29,7 +29,19 @@ def initDB(*args, **kwargs):
         for d in dishes:
             db.session.add(Dish(name=d['name'], price=d['price'], salesPrice=d['salesPrice']))
         db.session.commit()             
-
+    if User.query.count() == 0:
+        user = User(username = "Customer Caden", firstname = "Caden", lastname = "Weiner", address = "Home", email = "caden.weiner@wsu.edu")
+        user.set_password("123")
+        db.session.add(user)
+        db.session.commit()
+    if Manager.query.count() == 0:
+        muser = User(username = "Manager Lycoris", firstname = "Lycoris", lastname = "Raidata", address = "Home", email = "lycoris.raidata@wsu.edu", is_manager = True)
+        muser.set_password("123")
+        db.session.add(muser)
+        db.session.commit()
+        manager = Manager(user_id = muser.id, shop_name = "Angel's Tears")
+        db.session.add(manager)
+        db.session.commit()
 
 @app.route('/', methods=['GET', 'Post'])
 @app.route('/menu', methods=['GET', 'POST'])
@@ -81,103 +93,125 @@ def logout():
 @login_required
 @app.route('/drinkorder/<name>', methods=['GET', 'POST'])# need a way to keep track of an order. Add to users cart? And also add to Managers cart?
 def orderdrink(name):
-    #pass in a list of all of the drinks to the rendered template#create a box for each item that contains a beverage form.     #take the item in as an input#like the delete functionality for smile.     # no need for the  query select field
-    if Order.query.filter_by(user_id = current_user.id).count() == 0: # they already have an existing order
-        order = Order(user_id = current_user.id).first() #need to create an order
+    if not current_user.is_manager: 
+    
+        #pass in a list of all of the drinks to the rendered template#create a box for each item that contains a beverage form.     #take the item in as an input#like the delete functionality for smile.     # no need for the  query select field
+        if Order.query.filter_by(user_id = current_user.id).count() == 0: # they already have an existing order
+            order = Order(user_id = current_user.id) #need to create an order
+            db.session.add(order)
+            db.session.commit()
+        else: 
+            order = Order.query.filter_by(user_id = current_user.id).first()
+        items = Item.query.filter_by(order_id = order.cart_id).all()
+        order.cart_items = items
+        order.user_id = current_user.id
+        db.session.commit()
+        drink = Beverage.query.filter_by(name = name).first()
+        item = Item(order_id = order.cart_id, name = name, price = drink.price, salesPrice = drink.salesPrice, itemType = 'drink')
+        #item.name = form.beverage.data
+        db.session.add(item)
         db.session.add(order)
         db.session.commit()
+        flash('Congratulations, you ordered a beverage!')
+        return redirect(url_for('list_drinks'))
     else: 
-        order = Order.query.filter_by(user_id = current_user.id).first()
-    items = Item.query.filter_by(order_id = order.cart_id).all()
-    order.cart_items = items
-    order.user_id = current_user.id
-    db.session.commit()
-    drink = Beverage.query.filter_by(name = name).first()
-    item = Item(order_id = order.cart_id, name = name, price = drink.price, salesPrice = drink.salesPrice, itemType = 'drink')
-        #item.name = form.beverage.data
-    db.session.add(item)
-    db.session.add(order)
-    db.session.commit()
-    flash('Congratulations, you ordered a beverage!')
-    return redirect(url_for('list_drinks'))
+        return render_template('not_authorized.html')
       
 @login_required
 @app.route('/drinklist', methods=['GET', 'POST'])# need a way to keep track of an order. Add to users cart? And also add to Managers cart? Order number. Way to mark order fufilled.
 def list_drinks():
-    form = BeverageOrderForm()
-    beverages = Beverage.query.all()
-    ingredients = get_drink_ingredients()
-    return render_template('beverageorder.html', title='Order Drink', form=form, beverages = beverages, ingredients = ingredients) 
-    
+    if not current_user.is_manager: 
+        form = BeverageOrderForm()
+        beverages = Beverage.query.all()
+        ingredients = get_drink_ingredients()
+        return render_template('beverageorder.html', title='Order Drink', form=form, beverages = beverages, ingredients = ingredients) 
+    else: 
+        return render_template('not_authorized.html')
 
 @login_required
 @app.route('/dishorder/<name>', methods=['GET', 'POST'])# need a way to keep track of an order. Add to users cart? And also add to Managers cart? Order number. Way to mark order fufilled.
 def orderdish(name):
 #pass in a list of all of the drinks to the rendered template#create a box for each item that contains a beverage form.     #take the item in as an input#like the delete functionality for smile.     # no need for the  query select field
-    if Order.query.filter_by(user_id = current_user.id).count() == 0: # they already have an existing order
-        order = Order(user_id = current_user.id).first() #need to create an order
-        db.session.add(order)
-        db.session.commit()
-        flash("order created")
-    else: 
-        order = Order.query.filter_by(user_id = current_user.id).first()
+    if not current_user.is_manager: 
+        if Order.query.filter_by(user_id = current_user.id).count() == 0: # they already have an existing order
+            order = Order(user_id = current_user.id) #need to create an order
+            db.session.add(order)
+            db.session.commit()
+            flash("order created")
+        else: 
+            order = Order.query.filter_by(user_id = current_user.id).first()
 
-    items = Item.query.filter_by(order_id = order.cart_id).all()
-    order.cart_items = items
-    order.user_id = current_user.id
-    db.session.commit()
-    dish = Dish.query.filter_by(name = name).first()
-    item = Item(order_id = order.cart_id, name = name, price = dish.price, salesPrice = dish.salesPrice, itemType = 'dish')
-    db.session.add(item)
-    db.session.commit()
-    flash('Congratulations, you ordered a dish!')
-    return redirect(url_for('list_dishes'))
+        items = Item.query.filter_by(order_id = order.cart_id).all()
+        order.cart_items = items
+        order.user_id = current_user.id
+        db.session.commit()
+        dish = Dish.query.filter_by(name = name).first()
+        item = Item(order_id = order.cart_id, name = name, price = dish.price, salesPrice = dish.salesPrice, itemType = 'dish')
+        db.session.add(item)
+        db.session.commit()
+        flash('Congratulations, you ordered a dish!')
+        return redirect(url_for('list_dishes'))
+    else: 
+        return render_template('not_authorized.html')
+
       
 @login_required
 @app.route('/dishlist', methods=['GET', 'POST'])# need a way to keep track of an order. Add to users cart? And also add to Managers cart? Order number. Way to mark order fufilled.
 def list_dishes():
-    form = DishOrderForm()
-    dishes = Dish.query.all()
-    ingredients = get_dish_ingredients()
-    return render_template('dishorder.html', title='Order Dish', form=form, dishes = dishes, ingredients = ingredients) 
-    
+    if not current_user.is_manager: 
+        form = DishOrderForm()
+        dishes = Dish.query.all()
+        ingredients = get_dish_ingredients()
+        return render_template('dishorder.html', title='Order Dish', form=form, dishes = dishes, ingredients = ingredients) 
+    else: 
+        return render_template('not_authorized.html')
+
 
 #add security for log in. if statements to verify they are the manager
 @login_required
 @app.route('/createdrink', methods=['GET', 'POST'])
 def createdrink():
-    form = BeverageCreationForm()
-    if form.validate_on_submit():
-        drink = Beverage(name = form.beverage.data, price = form.beverageCost.data, salesPrice = form.beverageSalesCost.data, ingredients = form.ingredients.data)
-        db.session.add(drink)
-        db.session.commit()
-        flash('Congratulations, you created a new beverage!')
-        return redirect(url_for('createdrink'))
-    return render_template('beveragecreate.html', title='CreateDrink', form=form)   
+    if current_user.is_manager:
+        form = BeverageCreationForm()
+        if form.validate_on_submit():
+            drink = Beverage(name = form.beverage.data, price = form.beverageCost.data, salesPrice = form.beverageSalesCost.data, ingredients = form.ingredients.data)
+            db.session.add(drink)
+            db.session.commit()
+            flash('Congratulations, you created a new beverage!')
+            return redirect(url_for('createdrink'))
+        return render_template('beveragecreate.html', title='CreateDrink', form=form)   
+    else: 
+        return render_template('not_authorized.html')
 
 @login_required
 @app.route('/createdish', methods=['GET', 'POST'])
 def createdish():
-    form = DishCreationForm()
-    if form.validate_on_submit():
-        dish = Dish(name = form.dish.data, price = form.dishCost.data, salesPrice = form.dishSalesCost.data, ingredients = form.ingredients.data)
-        db.session.add(dish)
-        db.session.commit()
-        flash('Congratulations, you created a new Meal!')
-        return redirect(url_for('createdish'))
-    return render_template('dishcreate.html', title='CreateDish', form=form)   
+    if current_user.is_manager:
+        form = DishCreationForm()
+        if form.validate_on_submit():
+            dish = Dish(name = form.dish.data, price = form.dishCost.data, salesPrice = form.dishSalesCost.data, ingredients = form.ingredients.data)
+            db.session.add(dish)
+            db.session.commit()
+            flash('Congratulations, you created a new Meal!')
+            return redirect(url_for('createdish'))
+        return render_template('dishcreate.html', title='CreateDish', form=form)   
+    else: 
+        return render_template('not_authorized.html')
 
 @login_required
 @app.route('/newingredient', methods=['GET', 'POST'])
 def createingredient():
-    form = NewIngredientForm()
-    if form.validate_on_submit():
-        ingredient = Ingredient(name = form.ingredientName.data, price = form.ingredientCost.data, salesPrice = form.ingredientSalesCost.data, ingredientType = form.ingredientType.data)
-        db.session.add(ingredient)
-        db.session.commit()
-        flash('Congratulations, you added a new Ingredient!')
-        return redirect(url_for('createingredient'))
-    return render_template('createingredients.html', title='CreateIngredient', form=form)   
+    if current_user.is_manager:
+        form = NewIngredientForm()
+        if form.validate_on_submit():
+            ingredient = Ingredient(name = form.ingredientName.data, price = form.ingredientCost.data, salesPrice = form.ingredientSalesCost.data, ingredientType = form.ingredientType.data)
+            db.session.add(ingredient)
+            db.session.commit()
+            flash('Congratulations, you added a new Ingredient!')
+            return redirect(url_for('createingredient'))
+        return render_template('createingredients.html', title='CreateIngredient', form=form)   
+    else: 
+        return render_template('not_authorized.html')
 
 
 
@@ -187,14 +221,16 @@ def list_order():
     
     if current_user.is_manager: #manager
         orders = Order.query.all()
+        flash("View Orders")
         return render_template('view_orders.html', orders = orders)
     else: #student
         order = Order.query.filter_by(user_id = current_user.id).first()
-        flash("The order has been fufilled {}".format(order.order_fufilled))
         if order.order_fufilled == True: # if order is fufilled then the student can't order it again
-            flash('You don not currently have an order')
+            flash('You do not currently have an order')
+            #start new order button: sets the order_fufilled to false
+            #when the manager completes the order, procedes to delete all items in the cart
             return redirect(url_for('menu'))
-            
+        flash("The order has been fufilled {}".format(order.order_fufilled))
         items = Item.query.filter_by(order_id = order.cart_id)
         dform = DeleteForm()
         form = CompletionForm()
@@ -203,15 +239,17 @@ def list_order():
 @login_required
 @app.route('/place_order/<order_id>', methods=['GET', 'POST'])
 def place_order(order_id):
-    
-    order = Order.query.filter_by(cart_id = order_id).first()
-    if order.user_id == current_user.id:
-        order.order_fufilled = True # order is placed don't let them order it again
-        db.session.commit()
-        return redirect(url_for('menu'))
-    else : 
-        flash("The order was not placed because it was not your order")
-        return redirect(url_for('list_order'))
+    if not current_user.is_manager:
+        order = Order.query.filter_by(cart_id = order_id).first()
+        if order.user_id == current_user.id:
+            order.order_fufilled = True # order is placed don't let them order it again
+            db.session.commit()
+            return redirect(url_for('menu'))
+        else : 
+            flash("The order was not placed because it was not your order")
+            return redirect(url_for('list_order'))
+    else: 
+        return render_template('not_authorized.html')
 
 #we need another variable to see if the manager has made the order. Ready for pickup?
     
@@ -219,22 +257,26 @@ def place_order(order_id):
 @login_required
 @app.route('/remove_item/<item_id>', methods=['GET', 'POST', 'DELETE'])
 def remove_item(item_id):
-    item = Item.query.get(item_id) #must use id, or another unique identifier
+    if not current_user.is_manager:
+        item = Item.query.get(item_id) #must use id, or another unique identifier
     
-    for i in item.ingredients:
-        item.ingredients.remove(i)
+        for i in item.ingredients:
+            item.ingredients.remove(i)
 
-    db.session.commit()
-    db.session.delete(item)
-    db.session.commit()
-    flash('Removed the Item')
-    return redirect(url_for('list_order'))
-
+        db.session.commit()
+        db.session.delete(item)
+        db.session.commit()
+        flash('Removed the Item')
+        return redirect(url_for('list_order'))
+    else: 
+        return render_template('not_authorized.html')
 
 @login_required
 @app.route('/fufill_order/<order_id>', methods=['GET', 'POST'])
 def fufill_order():
-    
-    return redirect(url_for('list_order'))
+    if current_user.is_manager:
+        return redirect(url_for('list_order')) # only managers can complete an order
+    else: 
+        return render_template('not_authorized.html')
 
 

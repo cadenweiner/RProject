@@ -20,9 +20,12 @@
         <td width = "5%" >
             <br> 
             <h1 class = "center">Additional Ingredients</h1>
+            {%if current_user.is_manager == false%}
             <form class = "center" action="{{ url_for('remove_item', item_id = item.id)}}" method="post">
                 {{dform.submit(class = 'button')}}
             </form>
+            
+            {%endif%}
         </td>
     </tr>
     
