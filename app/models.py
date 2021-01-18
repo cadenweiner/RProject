@@ -57,7 +57,10 @@ class Ingredient(db.Model):
                             backref=db.backref('beverageIngredients', lazy='dynamic'), lazy='dynamic') 
     meals = db.relationship ('Dish', secondary = dishIngredients, 
                             primaryjoin=(dishIngredients.c.ingredient_id == id),
-                            backref=db.backref('dishIngredients', lazy='dynamic'), lazy='dynamic') 
+                            backref=db.backref('dishIngredients', lazy='dynamic'), lazy='dynamic')
+    items = db.relationship ('Item', secondary = itemIngredients, 
+                            primaryjoin=(itemIngredients.c.ingredient_id == id),
+                            backref=db.backref('itemIngredients', lazy='dynamic'), lazy='dynamic') 
     def __repr__(self):
         return '{}-{}'.format(self.id,self.name)
 

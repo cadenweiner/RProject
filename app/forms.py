@@ -87,4 +87,4 @@ class DeleteForm(FlaskForm): #for student to sort course by recommendation
     submit = SubmitField('Delete')
 
 class CompletionForm(FlaskForm): #for student to sort course by recommendation
-    submit = SubmitField('Fufill')
+    submit = SubmitField('Complete')

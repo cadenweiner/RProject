@@ -20,7 +20,7 @@
         <td width = "5%" >
             <br> 
             <h1 class = "center">Additional Ingredients</h1>
-            <form class = "center" action="{{ url_for('remove_item', name = item.name)}}" method="post">
+            <form class = "center" action="{{ url_for('remove_item', item_id = item.id)}}" method="post">
                 {{dform.submit(class = 'button')}}
             </form>
         </td>

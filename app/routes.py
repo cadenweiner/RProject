@@ -199,21 +199,22 @@ def list_order():
 @app.route('/place_order/<order_id>', methods=['GET', 'POST'])
 def place_order(order_id):
     
-    order = Order.filter_by(order_id = order_id)
+    order = Order.query.filter_by(cart_id = order_id).first()
     if order.user_id == current_user.id:
         order.order_fufilled = True
         flash("The order has been placed")
+        return redirect(url_for('menu'))
     else : 
-        flash("The order was not placed")
-        return redirect(url_for(list_order))
-    render_template('menu')
+        print("inside the else statement")
+        flash("The order was not placed because it was not your order")
+        return redirect(url_for('list_order'))
 
     
 
 @login_required
-@app.route('/remove_item/<name>', methods=['GET', 'POST', 'DELETE'])
-def remove_item(name):
-    item = Item.query.get(name)
+@app.route('/remove_item/<item_id>', methods=['GET', 'POST', 'DELETE'])
+def remove_item(item_id):
+    item = Item.query.get(item_id) #must use id, or another unique identifier
     
     for i in item.ingredients:
         item.ingredients.remove(i)
