@@ -1,0 +1,129 @@
+2021-01-18 16:59:15,601 INFO: WebApp startup [in C:\Users\caden\RProject\app\__init__.py:45]
+2021-01-18 16:59:26,530 ERROR: Exception on /fufill_order/2 [POST] [in C:\Users\caden\anaconda3\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask_mail.py", line 492, in send
+    message.send(connection)
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask_mail.py", line 427, in send
+    connection.send(self)
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask_mail.py", line 188, in send
+    self.host.sendmail(sanitize_address(envelope_from or message.sender),
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 856, in sendmail
+    self.ehlo_or_helo_if_needed()
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 604, in ehlo_or_helo_if_needed
+    if not (200 <= self.ehlo()[0] <= 299):
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 444, in ehlo
+    self.putcmd(self.ehlo_msg, name or self.local_hostname)
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 371, in putcmd
+    self.send(str)
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 363, in send
+    raise SMTPServerDisconnected('please run connect() first')
+smtplib.SMTPServerDisconnected: please run connect() first
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\caden\RProject\app\routes.py", line 301, in fufill_order
+    send_password_order_completed_email(user)# sends the email that their order is completed
+  File "C:\Users\caden\RProject\app\email.py", line 16, in send_password_order_completed_email
+    send_email('[CadenWeiner] Order Ready',
+  File "C:\Users\caden\RProject\app\email.py", line 13, in send_email
+    mail.send(msg)
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask_mail.py", line 492, in send
+    message.send(connection)
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask_mail.py", line 152, in __exit__
+    self.host.quit()
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 988, in quit
+    res = self.docmd("quit")
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 424, in docmd
+    self.putcmd(cmd, args)
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 371, in putcmd
+    self.send(str)
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 363, in send
+    raise SMTPServerDisconnected('please run connect() first')
+smtplib.SMTPServerDisconnected: please run connect() first
+2021-01-18 17:00:35,435 INFO: WebApp startup [in C:\Users\caden\RProject\app\__init__.py:45]
+2021-01-18 17:00:41,234 ERROR: Exception on /fufill_order/2 [POST] [in C:\Users\caden\anaconda3\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask_mail.py", line 492, in send
+    message.send(connection)
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask_mail.py", line 427, in send
+    connection.send(self)
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask_mail.py", line 188, in send
+    self.host.sendmail(sanitize_address(envelope_from or message.sender),
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 856, in sendmail
+    self.ehlo_or_helo_if_needed()
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 604, in ehlo_or_helo_if_needed
+    if not (200 <= self.ehlo()[0] <= 299):
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 444, in ehlo
+    self.putcmd(self.ehlo_msg, name or self.local_hostname)
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 371, in putcmd
+    self.send(str)
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 363, in send
+    raise SMTPServerDisconnected('please run connect() first')
+smtplib.SMTPServerDisconnected: please run connect() first
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\caden\RProject\app\routes.py", line 301, in fufill_order
+    send_password_order_completed_email(user)# sends the email that their order is completed
+  File "C:\Users\caden\RProject\app\email.py", line 17, in send_password_order_completed_email
+    send_email('[CadenWeiner] Order Ready',
+  File "C:\Users\caden\RProject\app\email.py", line 13, in send_email
+    mail.send(msg)
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask_mail.py", line 492, in send
+    message.send(connection)
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask_mail.py", line 152, in __exit__
+    self.host.quit()
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 988, in quit
+    res = self.docmd("quit")
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 424, in docmd
+    self.putcmd(cmd, args)
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 371, in putcmd
+    self.send(str)
+  File "C:\Users\caden\anaconda3\lib\smtplib.py", line 363, in send
+    raise SMTPServerDisconnected('please run connect() first')
+smtplib.SMTPServerDisconnected: please run connect() first
+2021-01-18 17:04:38,216 INFO: WebApp startup [in C:\Users\caden\RProject\app\__init__.py:45]
+2021-01-18 17:05:22,606 ERROR: Exception on /list_order [GET] [in C:\Users\caden\anaconda3\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\caden\anaconda3\lib\site-packages\flask\app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "C:\Users\caden\RProject\app\routes.py", line 236, in list_order
+    if order.order_fufilled == True: # if order is fufilled then the student can't order it again
+AttributeError: 'NoneType' object has no attribute 'order_fufilled'
+2021-01-18 17:13:19,381 INFO: WebApp startup [in C:\Users\caden\RProject\app\__init__.py:45]

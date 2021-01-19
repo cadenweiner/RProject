@@ -9,7 +9,7 @@ from app import app,db
 
 from app.forms import RegistrationForm, LoginForm, DeleteForm, DishCreationForm, BeverageCreationForm, NewIngredientForm, DishOrderForm, BeverageOrderForm, CompletionForm, get_drink_ingredients, get_dish_ingredients
 from app.models import Dish, Beverage, Ingredient, beverageIngredients, dishIngredients, Manager, Item, User, Order
-
+from app.email import send_email, send_password_order_completed_email
 
 @app.before_first_request
 def initDB(*args, **kwargs):
@@ -30,11 +30,18 @@ def initDB(*args, **kwargs):
             db.session.add(Dish(name=d['name'], price=d['price'], salesPrice=d['salesPrice']))
         db.session.commit()             
     if User.query.count() == 0:
-        user = User(username = "Customer Caden", firstname = "Caden", lastname = "Weiner", address = "Home", email = "caden.weiner@wsu.edu")
+        #customer 1
+        user = User(username = "Caden", firstname = "Caden", lastname = "Weiner", address = "Home", email = "cadenweiner67@gmail.com")
+        user.set_password("123")
+        db.session.add(user)
+        db.session.commit()
+        #customer 2
+        user = User(username = "Null", firstname = "Null", lastname = "0", address = "Home", email = "caden.weiner@wsu.edu")
         user.set_password("123")
         db.session.add(user)
         db.session.commit()
     if Manager.query.count() == 0:
+        #manager
         muser = User(username = "Manager Lycoris", firstname = "Lycoris", lastname = "Raidata", address = "Home", email = "lycoris.raidata@wsu.edu", is_manager = True)
         muser.set_password("123")
         db.session.add(muser)
@@ -97,7 +104,7 @@ def orderdrink(name):
     
         #pass in a list of all of the drinks to the rendered template#create a box for each item that contains a beverage form.     #take the item in as an input#like the delete functionality for smile.     # no need for the  query select field
         if Order.query.filter_by(user_id = current_user.id).count() == 0: # they already have an existing order
-            order = Order(user_id = current_user.id) #need to create an order
+            order = Order(user_id = current_user.id, username = current_user.username) #need to create an order
             db.session.add(order)
             db.session.commit()
         else: 
@@ -134,7 +141,7 @@ def orderdish(name):
 #pass in a list of all of the drinks to the rendered template#create a box for each item that contains a beverage form.     #take the item in as an input#like the delete functionality for smile.     # no need for the  query select field
     if not current_user.is_manager: 
         if Order.query.filter_by(user_id = current_user.id).count() == 0: # they already have an existing order
-            order = Order(user_id = current_user.id) #need to create an order
+            order = Order(user_id = current_user.id, username = current_user.username) #need to create an order
             db.session.add(order)
             db.session.commit()
             flash("order created")
@@ -222,9 +229,17 @@ def list_order():
     if current_user.is_manager: #manager
         orders = Order.query.all()
         flash("View Orders")
-        return render_template('view_orders.html', orders = orders)
+        form = CompletionForm()
+        return render_template('view_orders.html', orders = orders, form = form)
     else: #student
-        order = Order.query.filter_by(user_id = current_user.id).first()
+#need an if statement, if there is no order create a new one for the user
+        if Order.query.filter_by(user_id = current_user.id).count() == 0: # the user does not have an order
+            order = Order(user_id = current_user.id, username = current_user.username)
+            db.session.add(order)
+            db.session.commit()
+        else: # they already have an order
+            order = Order.query.filter_by(user_id = current_user.id).first()
+
         if order.order_fufilled == True: # if order is fufilled then the student can't order it again
             flash('You do not currently have an order')
             #start new order button: sets the order_fufilled to false
@@ -272,11 +287,39 @@ def remove_item(item_id):
         return render_template('not_authorized.html')
 
 @login_required
-@app.route('/fufill_order/<order_id>', methods=['GET', 'POST'])
-def fufill_order():
+@app.route('/fufill_order/<cart_id>', methods=['GET', 'POST'])
+def fufill_order(cart_id):
     if current_user.is_manager:
+        #delete the completed order and email the user
+        #
+        #Flask Email
+        #tell them that their order is completed
+        #Delete order, its not needed anymore
+        order = Order.query.get(cart_id)
+        for item in order.cart_items: 
+            for ingredient in item.ingredients: 
+                item.ingredients.remove(ingredient) # remove the ingredient from the items ingredients
+            db.session.commit()
+            db.session.delete(item)
+            db.session.commit()#removes the item
+
+        #user = User.query.filter_by(id = order.user_id).first()# this is the user to be emailed
+        
+        #send_password_order_completed_email(user)# sends the email that their order is completed
+        #currently giving a run connect error first. I have tried to deal with this however I have not been taught email functionality. I will have to research at a different time
+
+
+
+        #removes all of the items in the order
+        db.session.commit()
+        db.session.delete(order)
+        db.session.commit()#removes the order after all its items and the items ingredients are removed
+
+        #allows the manager to continue viewing orders
         return redirect(url_for('list_order')) # only managers can complete an order
     else: 
         return render_template('not_authorized.html')
 
 
+
+#Let an order change their information

@@ -113,7 +113,9 @@ a:hover {
 }
 .post-box{
     display : flex; 
-    verticle-align : middle; 
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
     background-color: aliceblue;
     padding : .1%; 
     margin : .3%;

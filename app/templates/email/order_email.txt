@@ -1,0 +1,6 @@
+Dear {{ user.username }},
+
+You Order has been completed and is ready for pickup.
+
+Sincerely,
+Caden Weiner

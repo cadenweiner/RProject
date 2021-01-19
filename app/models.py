@@ -97,6 +97,8 @@ class Order(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     cart_items = db.relationship('Item', backref='cart_items', lazy = 'dynamic')     
     order_fufilled = db.Column(db.Boolean, default = False)
+    username = db.Column(db.String(64))
+    # add a name here for the user
 
 
 class Item(db.Model):

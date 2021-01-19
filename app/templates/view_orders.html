@@ -4,12 +4,23 @@
 
     <h1 class = center>Complete Orders</h1>
     {%for order in orders%}
-    <div class = post-box>
+    <h1 class = center style="font-size:12px;">{{order.username}}</h1>
+    <div class = center>
+    <div class = post-box style = "margin: auto;">
         {%for item in order.cart_items%}
         <div class = post-box>
             {% include '_easyviewitem.html' %} 
         </div>
         {%endfor%}
     </div>
+</div>
+    <h1>
+        <form class = "center" action="{{ url_for('fufill_order', cart_id = order.cart_id)}}" method="post">
+            {{form.submit(class = 'button')}}
+        </form>
+    </h1>
     {%endfor%}
+
+
+
   {% endblock %}
