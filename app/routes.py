@@ -256,6 +256,7 @@ def list_order():
 def place_order(order_id):
     if not current_user.is_manager:
         order = Order.query.filter_by(cart_id = order_id).first()
+        #need to check if the order is empty or not first
         if order.user_id == current_user.id:
             order.order_fufilled = True # order is placed don't let them order it again
             db.session.commit()
