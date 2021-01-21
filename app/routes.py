@@ -9,7 +9,6 @@ from app import app,db
 
 from app.forms import RegistrationForm, LoginForm, DeleteForm, DishCreationForm, BeverageCreationForm, NewIngredientForm, DishOrderForm, BeverageOrderForm, CompletionForm, get_drink_ingredients, get_dish_ingredients
 from app.models import Dish, Beverage, Ingredient, beverageIngredients, dishIngredients, Manager, Item, User, Order
-from app.email import send_email, send_password_order_completed_email
 
 @app.before_first_request
 def initDB(*args, **kwargs):
